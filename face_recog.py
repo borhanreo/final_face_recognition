@@ -83,6 +83,7 @@ while True:
     for face_encoding in face_encodings:
         # See if the face is a match for the known face(s)
         matches = face_recognition.compare_faces(known_face_encodings, face_encoding)
+        global name
         name = "Unknown"
     
         # If a match was found in known_face_encodings, just use the first one.
@@ -99,7 +100,10 @@ while True:
         print("   ", name)
     process_this_frame = not process_this_frame
     
-    
+    top=0
+    right=0
+    bottom=0
+    left=0
     # Display the results
     for (top, right, bottom, left), name in zip(face_locations, face_names):
            # Scale back up face locations since the frame we detected in was scaled to 1/4 size
@@ -109,12 +113,12 @@ while True:
            left *= 4
     
     # Draw a box around the face
-    # cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
-    #
-    #        # Draw a label with a name below the face
-    # cv2.rectangle(frame, (left, bottom - 35), (right, bottom), (0, 0, 255), cv2.FILLED)
-    # font = cv2.FONT_HERSHEY_DUPLEX
-    # cv2.putText(frame, name, (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
+    cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
+
+           # Draw a label with a name below the face
+    cv2.rectangle(frame, (left, bottom - 35), (right, bottom), (0, 0, 255), cv2.FILLED)
+    font = cv2.FONT_HERSHEY_DUPLEX
+    cv2.putText(frame, "A", (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
     
     # Display the resulting image
     cv2.imshow('Video', frame)
