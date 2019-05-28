@@ -46,7 +46,8 @@ def use_live(name,top,left,bottom,right):
     video_capture = cv2.VideoCapture(0)
     while True:
         ret, frame = video_capture.read()
-        cv2.imwrite(image_file, frame)
+        small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
+        cv2.imwrite(image_file, small_frame)
         full_file_path = os.path.join(base_dir + "/face_image/test", image_file)
         # print("Looking for faces in {}".format(image_file))
         predictions = predict(full_file_path, model_path=base_dir + "/trained_knn_model.clf")
@@ -76,6 +77,50 @@ def use_image():
         for name, (top, right, bottom, left) in predictions:
             print("- Found {} at ({}, {})".format(name, left, top))
         show_prediction_labels_on_image(os.path.join(base_dir+"face_image/test", image_file), predictions)
+
+
+def use_live_faster(name,top,left,bottom,right):
+    video_capture = cv2.VideoCapture(0)
+    knn_clf = None
+    with open(base_dir + "/trained_knn_model.clf", 'rb') as f:
+        knn_clf = pickle.load(f)
+    distance_threshold = 0.6
+    while True:
+        ret, frame = video_capture.read()
+        small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
+        rgb_small_frame = small_frame[:, :, ::-1]
+
+        X_img = face_recognition.load_image_file(base_dir+"/img.jpg")
+        X_face_locations = face_recognition.face_locations(X_img)
+        #X_face_locations = face_recognition.face_locations(rgb_small_frame)
+
+        if len(X_face_locations) == 0:
+            print ("None")
+
+        #face_locations = face_recognition.face_locations(rgb_small_frame)
+        #faces_encodings = face_recognition.face_encodings(rgb_small_frame, known_face_locations=X_face_locations)
+        faces_encodings = face_recognition.face_encodings(X_img, known_face_locations=X_face_locations)
+
+        closest_distances = knn_clf.kneighbors(faces_encodings, n_neighbors=1)
+        are_matches = [closest_distances[0][i][0] <= distance_threshold for i in range(len(X_face_locations))]
+
+        print("Match ",are_matches)
+
+        # full_file_path = os.path.join(base_dir + "/face_image/test", image_file)
+        # # print("Looking for faces in {}".format(image_file))
+        # predictions = predict(full_file_path, model_path=base_dir + "/trained_knn_model.clf")
+        # for name, (top, right, bottom, left) in predictions:
+        #     pass
+        #     # print("- Found {} at ({}, {})".format(name, left, top))
+        # # show_prediction_labels_on_image(os.path.join(base_dir + "face_image/test", image_file), predictions)
+        # # cv2.rectangle(frame, (left, bottom), (right, bottom), (0, 0, 255), cv2.FILLED)
+        # cv2.rectangle(frame, (left, bottom), (right, bottom), (0, 0, 255), cv2.FILLED)
+        # cv2.putText(frame, name, (left + 6, bottom - 6), cv2.FONT_HERSHEY_DUPLEX, 1.0, (255, 255, 255), 1)
+        # cv2.imshow('Video', frame)
+        # if cv2.waitKey(1) & 0xFF == ord('q'):
+        #     break
+
 if __name__ == "__main__":
         #use_image()
         use_live(name,top,left,bottom,right)
+        #use_live_faster(name,top,left,bottom,right)
