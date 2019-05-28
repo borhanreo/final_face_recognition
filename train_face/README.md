@@ -14,4 +14,10 @@
                     ---> img2.jpg
                     --->
                     ---> imgn.jpg
-                               
+## Run
+
+    python3 train.py
+    
+## Test 
+
+    python3 test.py                                   
