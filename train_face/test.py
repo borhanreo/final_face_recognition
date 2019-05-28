@@ -3,10 +3,15 @@ import os.path
 import pickle
 from PIL import Image, ImageDraw
 import face_recognition
-
+import cv2
 base_dir= os.getcwd()+"/train_face/"
+image_file = base_dir+"/img.jpg"
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
-
+top=0
+right=0
+bottom=0
+left=0
+name = ""
 def predict(X_img_path, knn_clf=None, model_path=None, distance_threshold=0.6):
     if not os.path.isfile(X_img_path) or os.path.splitext(X_img_path)[1][1:] not in ALLOWED_EXTENSIONS:
         raise Exception("Invalid image path: {}".format(X_img_path))
@@ -37,8 +42,25 @@ def show_prediction_labels_on_image(img_path, predictions):
     del draw
     pil_image.show()
 
-
-if __name__ == "__main__":
+def use_live(name,top,left,bottom,right):
+    video_capture = cv2.VideoCapture(0)
+    while True:
+        ret, frame = video_capture.read()
+        cv2.imwrite(image_file, frame)
+        full_file_path = os.path.join(base_dir + "/face_image/test", image_file)
+        # print("Looking for faces in {}".format(image_file))
+        predictions = predict(full_file_path, model_path=base_dir + "/trained_knn_model.clf")
+        for name, (top, right, bottom, left) in predictions:
+            pass
+            # print("- Found {} at ({}, {})".format(name, left, top))
+        # show_prediction_labels_on_image(os.path.join(base_dir + "face_image/test", image_file), predictions)
+        #cv2.rectangle(frame, (left, bottom), (right, bottom), (0, 0, 255), cv2.FILLED)
+        cv2.rectangle(frame, (left, bottom), (right, bottom), (0, 0, 255), cv2.FILLED)
+        cv2.putText(frame, name, (left + 6, bottom - 6), cv2.FONT_HERSHEY_DUPLEX, 1.0, (255, 255, 255), 1)
+        cv2.imshow('Video', frame)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+def use_all_image():
     for image_file in os.listdir(base_dir+"/face_image/test"):
         full_file_path = os.path.join(base_dir+"/face_image/test", image_file)
         print("Looking for faces in {}".format(image_file))
@@ -46,3 +68,14 @@ if __name__ == "__main__":
         for name, (top, right, bottom, left) in predictions:
             print("- Found {} at ({}, {})".format(name, left, top))
         show_prediction_labels_on_image(os.path.join(base_dir+"face_image/test", image_file), predictions)
+def use_image():
+        image_file = base_dir+"/face_image/test/borhan.jpeg"
+        full_file_path = os.path.join(base_dir+"/face_image/test", image_file)
+        print("Looking for faces in {}".format(image_file))
+        predictions = predict(full_file_path, model_path=base_dir+"/trained_knn_model.clf")
+        for name, (top, right, bottom, left) in predictions:
+            print("- Found {} at ({}, {})".format(name, left, top))
+        show_prediction_labels_on_image(os.path.join(base_dir+"face_image/test", image_file), predictions)
+if __name__ == "__main__":
+        #use_image()
+        use_live(name,top,left,bottom,right)
