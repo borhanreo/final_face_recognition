@@ -18,3 +18,12 @@ HOW TO USE:
 
 **Future updates..
 Adding google spreadsheet for easy multiple access.
+
+
+#### Issue dlib
+
+    git clone https://github.com/davisking/dlib.git
+    cd dlib
+    mkdir build; cd build; cmake ..; cmake --build .
+    cd ..
+    python3 setup.py install
