@@ -4,7 +4,8 @@ import pickle
 from PIL import Image, ImageDraw
 import face_recognition
 import cv2
-base_dir= os.getcwd()+"/train_face/"
+
+base_dir= os.getcwd()+"/"
 image_file = base_dir+"/img.jpg"
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 top=0
