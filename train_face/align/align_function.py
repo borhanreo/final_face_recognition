@@ -6,8 +6,8 @@ import os
 from tqdm import tqdm
 import argparse
 def get_crop_image(dest_root,crop_size,path,image_name):
-    if not os.path.isdir(os.path.join(dest_root, subfolder)):
-        os.mkdir(os.path.join(dest_root, subfolder))
+    if not os.path.isdir(dest_root):
+        os.mkdir(dest_root)
     scale = crop_size / 112.
     reference = get_reference_facial_points(default_square=True) * scale
     print("Processing",path)
