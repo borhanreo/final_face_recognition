@@ -10,7 +10,7 @@ def get_crop_image(dest_root,crop_size,path,image_name):
         os.mkdir(dest_root)
     scale = crop_size / 112.
     reference = get_reference_facial_points(default_square=True) * scale
-    print("Processing",path)
+    #print("Processing",path)
     img = Image.open(path)
     try:  # Handle exception
         _, landmarks = detect_faces(img)
@@ -23,8 +23,8 @@ def get_crop_image(dest_root,crop_size,path,image_name):
             image_name = '.'.join(image_name.split('.')[:-1]) + '.jpg'
         img_warped.save(dest_root, image_name)
         return dest_root + image_name
-    except Exception:
-        print("{} is discarded due to exception!")
+    except Exception as e:
+        print("{} is discarded due to exception!", e)
         return "Nooo"
 
 

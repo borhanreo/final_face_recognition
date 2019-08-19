@@ -56,9 +56,6 @@ def use_live(name,top,left,bottom,right):
         full_file_path_test = align_function.get_crop_image(base_dir,112,image_file,image_name)
         print("Borhan",full_file_path_test)
         full_file_path = os.path.join(base_dir + "/face_image/test", image_file)
-        # print("Looking for faces in {}".format(image_file))
-
-
         predictions = predict(full_file_path, model_path=base_dir + "/trained_knn_model.clf")
         for name, (top, right, bottom, left) in predictions:
             pass
