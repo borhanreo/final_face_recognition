@@ -6,7 +6,6 @@ import os
 from tqdm import tqdm
 import argparse
 
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description = "face alignment")
     parser.add_argument("-source_root", "--source_root", help = "specify your source dir", default = "./data/test", type = str)
