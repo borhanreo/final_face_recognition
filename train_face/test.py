@@ -4,7 +4,9 @@ import pickle
 from PIL import Image, ImageDraw
 import face_recognition
 import cv2
-
+from constant import Constant
+from align import align_function
+image_name= 'imgc.jpg'
 base_dir= os.getcwd()+"/"
 image_file = base_dir+"/img.jpg"
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
@@ -49,8 +51,12 @@ def use_live(name,top,left,bottom,right):
         ret, frame = video_capture.read()
         small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
         cv2.imwrite(image_file, small_frame)
+        #full_file_path = os.path.join(base_dir + "/face_image/test", image_file)
+        full_file_path_test = align_function.get_crop_image(base_dir,112,image_file,image_name)
         full_file_path = os.path.join(base_dir + "/face_image/test", image_file)
         # print("Looking for faces in {}".format(image_file))
+
+
         predictions = predict(full_file_path, model_path=base_dir + "/trained_knn_model.clf")
         for name, (top, right, bottom, left) in predictions:
             pass
