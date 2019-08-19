@@ -1,3 +1,4 @@
+#from align import align_function
 import os
 import os.path
 import pickle
@@ -5,7 +6,7 @@ from PIL import Image, ImageDraw
 import face_recognition
 import cv2
 from constant import Constant
-#from align import align_function
+
 image_name= 'imgc.jpg'
 base_dir= os.getcwd()+"/"
 image_file = base_dir+"/img.jpg"
